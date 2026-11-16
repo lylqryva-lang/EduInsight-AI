@@ -9,13 +9,14 @@ import matplotlib.pyplot as plt
 # 1. PROJECT CONFIGURATION
 # =====================================
 
-PROJECT = Path(__file__).resolve().parent
-RESULTS = PROJECT / "results"
-RAW_FOLDER = PROJECT / "data" / "raw"
+import pandas as pd
+import streamlit as st
 
-PREDICTION_PATH = (
-    RESULTS / "model_evaluation" / "integrated_predictions.csv"
-)
+CSV_URL = "https://raw.githubusercontent.com/lylqryva-lang/EduInsight-AI/main/results/model_evaluation/integrated_predictions.csv"
+
+@st.cache_data
+def load_predictions():
+    return pd.read_csv(CSV_URL)
 st.write("CSV path:", str(PREDICTION_PATH))
 st.write("File exists:", PREDICTION_PATH.exists())
 TOPIC_PATH = (
