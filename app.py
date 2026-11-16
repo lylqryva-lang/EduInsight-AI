@@ -9,7 +9,7 @@ PROJECT = Path(__file__).resolve().parent
 RESULTS = PROJECT / "results"
 RAW_FOLDER = PROJECT / "data" / "raw"
 
-PREDICTION_PATH = RESULTS / "integrated_predictions.csv"
+PREDICTION_PATH = RESULTS / "model_evaluation" / "integrated_predictions.csv"
 TOPIC_PATH = RESULTS / "topic_analysis" / "feedback_with_topics.csv"
 
 st.set_page_config(
