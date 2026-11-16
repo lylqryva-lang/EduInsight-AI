@@ -93,3 +93,14 @@ EduInsight-AI/
 Developed as an Artificial Intelligence and Machine Learning project.
 
 **EduInsight AI — Turning Educational Feedback into Insights.**
+
+## Trained Models
+
+The trained machine learning models are stored locally
+in the `models/absa/` directory.
+
+Model files are not included in this repository due to
+their large file sizes.
+
+To run the application, train the models using the
+provided Jupyter notebooks.
