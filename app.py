@@ -16,7 +16,8 @@ RAW_FOLDER = PROJECT / "data" / "raw"
 PREDICTION_PATH = (
     RESULTS / "model_evaluation" / "integrated_predictions.csv"
 )
-
+st.write("CSV path:", str(PREDICTION_PATH))
+st.write("File exists:", PREDICTION_PATH.exists())
 TOPIC_PATH = (
     RESULTS / "topic_analysis" / "feedback_with_topics.csv"
 )
