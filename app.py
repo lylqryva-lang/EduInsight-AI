@@ -6,25 +6,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 
 # =====================================
-# 1. PROJECT CONFIGURATION
-# =====================================
-
-import pandas as pd
-import streamlit as st
-
-CSV_URL = "https://raw.githubusercontent.com/lylqryva-lang/EduInsight-AI/main/results/model_evaluation/integrated_predictions.csv"
-
-@st.cache_data
-def load_predictions():
-    return pd.read_csv(CSV_URL)
-st.write("CSV path:", str(PREDICTION_PATH))
-st.write("File exists:", PREDICTION_PATH.exists())
-TOPIC_PATH = (
-    RESULTS / "topic_analysis" / "feedback_with_topics.csv"
-)
-
-# =====================================
-# 2. PAGE CONFIGURATION
+# 1. PAGE CONFIGURATION
 # =====================================
 
 st.set_page_config(
@@ -34,7 +16,40 @@ st.set_page_config(
 )
 
 # =====================================
-# 3. HEADER
+# 2. PROJECT CONFIGURATION
+# =====================================
+
+PROJECT = Path(__file__).resolve().parent
+
+RAW_FOLDER = PROJECT / "data" / "raw"
+
+TOPIC_PATH = (
+    PROJECT / "results" / "topic_analysis"
+    / "feedback_with_topics.csv"
+)
+
+CSV_URL = (
+    "https://raw.githubusercontent.com/"
+    "lylqryva-lang/EduInsight-AI/main/"
+    "results/model_evaluation/integrated_predictions.csv"
+)
+
+# =====================================
+# 3. DATA LOADING
+# =====================================
+
+@st.cache_data
+def load_predictions():
+    try:
+        df = pd.read_csv(CSV_URL)
+        return df
+    except Exception as e:
+        st.error(f"Could not load prediction results: {e}")
+        return pd.DataFrame()
+
+
+# =====================================
+# 4. HEADER
 # =====================================
 
 st.title("🎓 EduInsight AI")
@@ -49,17 +64,6 @@ identify common topics and improve educational quality.
 """)
 
 st.divider()
-
-# =====================================
-# 4. DATA LOADING
-# =====================================
-
-@st.cache_data
-def load_predictions():
-    if PREDICTION_PATH.exists():
-        return pd.read_csv(PREDICTION_PATH)
-    return pd.DataFrame()
-
 
 # =====================================
 # 5. SIDEBAR NAVIGATION
@@ -163,7 +167,6 @@ elif page == "Dataset":
             )
 
             try:
-
                 if selected_file.suffix == ".json":
 
                     with open(
@@ -243,7 +246,6 @@ elif page == "Topic Analysis":
             counts = df["dominant_topic"].value_counts()
 
             fig, ax = plt.subplots()
-
             counts.plot(kind="bar", ax=ax)
 
             ax.set_title("Topic Distribution")
@@ -266,13 +268,18 @@ elif page == "Sentiment Analysis":
 
     df = load_predictions()
 
-    if not df.empty and "predicted_sentiment" in df.columns:
+    if (
+        not df.empty
+        and "predicted_sentiment" in df.columns
+    ):
 
         st.metric("Total Reviews", len(df))
 
         st.subheader("Sentiment Distribution")
 
-        sentiment_counts = df["predicted_sentiment"].value_counts()
+        sentiment_counts = (
+            df["predicted_sentiment"].value_counts()
+        )
 
         st.bar_chart(sentiment_counts)
 
@@ -286,7 +293,7 @@ elif page == "Sentiment Analysis":
     else:
         st.warning(
             "Prediction results are not available. "
-            "Check the CSV file path and repository contents."
+            "Please check the CSV URL."
         )
 
 # =====================================
