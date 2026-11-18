@@ -222,6 +222,7 @@ elif page == "Dataset":
             "Raw dataset folder is not available in the repository."
         )
 
+
 # =====================================
 # 8. TOPIC ANALYSIS
 # =====================================
@@ -230,33 +231,57 @@ elif page == "Topic Analysis":
 
     st.header("📊 Topic Analysis")
 
-    if TOPIC_PATH.exists():
+    df = load_predictions()
 
-        df = pd.read_csv(TOPIC_PATH)
+    if not df.empty:
 
-        st.metric("Total Reviews", len(df))
+        if "predicted_category" in df.columns:
 
-        st.dataframe(
-            df.head(100),
-            use_container_width=True
-        )
+            st.subheader("Category Distribution")
 
-        if "dominant_topic" in df.columns:
+            category_counts = (
+                df["predicted_category"]
+                .dropna()
+                .value_counts()
+            )
 
-            counts = df["dominant_topic"].value_counts()
+            st.bar_chart(category_counts)
 
-            fig, ax = plt.subplots()
-            counts.plot(kind="bar", ax=ax)
+            st.subheader("Category Results")
 
-            ax.set_title("Topic Distribution")
-            ax.set_xlabel("Topic")
-            ax.set_ylabel("Number of Reviews")
+            st.dataframe(
+                category_counts.reset_index(),
+                use_container_width=True
+            )
 
-            st.pyplot(fig)
-            plt.close(fig)
+        if "predicted_aspect" in df.columns:
+
+            st.subheader("Aspect Distribution")
+
+            aspect_counts = (
+                df["predicted_aspect"]
+                .dropna()
+                .value_counts()
+            )
+
+            st.bar_chart(aspect_counts)
+
+            st.subheader("Aspect Results")
+
+            st.dataframe(
+                aspect_counts.reset_index(),
+                use_container_width=True
+            )
+
+        if (
+            "predicted_category" not in df.columns
+            and "predicted_aspect" not in df.columns
+        ):
+            st.warning("Aspect and category columns are missing.")
 
     else:
-        st.info("Topic analysis results are not available.")
+        st.warning("Prediction data is not available.")
+
 
 # =====================================
 # 9. SENTIMENT ANALYSIS
